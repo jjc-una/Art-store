@@ -6,14 +6,15 @@
   <title>{% block title %}ARTSTORE{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <script>
-    // Currency conversion rates (approximate, update as needed)
+    // Currency conversion rates (base currency: NGN)
+    // Prices stored in Naira (NGN) and converted to other currencies
     const rates = {
-      USD: 1,
-      EUR: 0.85,
-      GBP: 0.73,
-      JPY: 110,
-      CAD: 1.25,
-      NGN: 1500
+      NGN: 1,           // Base currency
+      USD: 0.000667,    // 1 NGN = 0.000667 USD (1 USD = 1500 NGN)
+      EUR: 0.000567,    // 1 NGN = 0.000567 EUR
+      GBP: 0.000487,    // 1 NGN = 0.000487 GBP
+      JPY: 0.0733,      // 1 NGN = 0.0733 JPY
+      CAD: 0.000833     // 1 NGN = 0.000833 CAD
     };
 
     const symbols = {
@@ -27,7 +28,7 @@
 
     // Load saved currency preference
     document.addEventListener('DOMContentLoaded', function() {
-      const savedCurrency = localStorage.getItem('selectedCurrency') || 'USD';
+      const savedCurrency = localStorage.getItem('selectedCurrency') || 'NGN';
       const currencySelect = document.getElementById('currency-select');
       if (currencySelect) {
         currencySelect.value = savedCurrency;
@@ -52,8 +53,8 @@
       const symbol = symbols[currency];
 
       document.querySelectorAll('.price').forEach(priceEl => {
-        const usdPrice = parseFloat(priceEl.dataset.usd);
-        const convertedPrice = (usdPrice * rate).toFixed(2);
+        const ngnPrice = parseFloat(priceEl.dataset.ngn);
+        const convertedPrice = (ngnPrice * rate).toFixed(2);
         priceEl.textContent = `${symbol}${convertedPrice}`;
       });
     }

@@ -13,13 +13,13 @@
       {% for item in items %}
       <li>
         <span>{{ item.product.name }} × {{ item.qty }}</span>
-        <span>${{ "%.2f"|format(item.subtotal) }}</span>
+        <span class="price" data-ngn="{{ item.subtotal }}">₦{{ "%.2f"|format(item.subtotal) }}</span>
       </li>
       {% endfor %}
     </ul>
     <div class="order-total">
       <strong>Total</strong>
-      <strong>${{ "%.2f"|format(total) }}</strong>
+      <strong class="price" data-ngn="{{ total }}">₦{{ "%.2f"|format(total) }}</strong>
     </div>
   </div>
 

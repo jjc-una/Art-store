@@ -90,7 +90,7 @@ def index():
 def products():
     """Product listing page."""
     conn = get_db()
-    products = conn.execute("SELECT * FROM products WHERE stock > 0").fetchall()
+    products = conn.execute("SELECT * FROM products").fetchall()
     conn.close()
     return render_template("products.html", products=products, cart_count=cart_count())
 

@@ -9,21 +9,24 @@
 
 <section class="product-grid">
   {% for p in products %}
-  <div class="product-card">
+  <div class="product-card{% if p.stock == 0 %} product-card--out-of-stock{% endif %}">
     <div class="product-image">
       {% if p.image_url %}
-        <img src="{{ p.image_url }}" alt="{{ p.name }}" />
+        <img src="{{ p.image_url }}" alt="{{ p.name }}" {% if p.stock == 0 %}class="product-image--grayed"{% endif %} />
       {% else %}
         <div class="product-image-placeholder">NO IMAGE</div>
+      {% endif %}
+      {% if p.stock == 0 %}
+        <div class="out-of-stock-overlay">Out of Stock</div>
       {% endif %}
     </div>
     <div class="product-info">
       <h2>{{ p.name }}</h2>
       <p class="product-desc">{{ p.description }}</p>
       <div class="product-footer">
-        <span class="price" data-usd="{{ p.price }}">${{ "%.2f"|format(p.price) }}</span>
+        <span class="price" data-ngn="{{ p.price }}">₦{{ "%.2f"|format(p.price) }}</span>
         <form action="{{ url_for('add_to_cart', product_id=p.id) }}" method="POST">
-          <button type="submit" class="btn">Add to Cart</button>
+          <button type="submit" class="btn"{% if p.stock == 0 %} disabled{% endif %}>{% if p.stock == 0 %}Sold Out{% else %}Add to Cart{% endif %}</button>
         </form>
       </div>
     </div>

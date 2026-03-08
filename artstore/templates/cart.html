@@ -22,9 +22,9 @@
       {% for item in items %}
       <tr>
         <td class="cart-name">{{ item.product.name }}</td>
-        <td>${{ "%.2f"|format(item.product.price) }}</td>
+        <td><span class="price" data-ngn="{{ item.product.price }}">₦{{ "%.2f"|format(item.product.price) }}</span></td>
         <td>{{ item.qty }}</td>
-        <td>${{ "%.2f"|format(item.subtotal) }}</td>
+        <td><span class="price" data-ngn="{{ item.subtotal }}">₦{{ "%.2f"|format(item.subtotal) }}</span></td>
         <td>
           <form action="{{ url_for('remove_from_cart', product_id=item.product.id) }}" method="POST">
             <button type="submit" class="btn btn--ghost btn--small">Remove</button>
@@ -36,7 +36,7 @@
   </table>
 
   <div class="cart-summary">
-    <span class="cart-total">Total: ${{ "%.2f"|format(total) }}</span>
+    <span class="cart-total">Total: <span class="price" data-ngn="{{ total }}">₦{{ "%.2f"|format(total) }}</span></span>
     <a href="{{ url_for('checkout') }}" class="btn btn--accent">Checkout →</a>
   </div>
 </div>
