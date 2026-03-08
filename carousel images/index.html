@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Shop — ARTSTORE{% endblock %}
+
+{% block content %}
+<!-- Image Carousel Background -->
+<div class="carousel-background">
+  <div class="carousel-slide active" style="background-image: url('https://www.pinterest.com/pin/5911043262343393/');"></div>
+  <div class="carousel-slide" style="background-image: url('https://www.pinterest.com/pin/234398355600367287/');"></div>
+  <div class="carousel-slide" style="background-image: url('https://www.pinterest.com/pin/537195061826185017/');"></div>
+</div>
+
+<!-- Overlay Content -->
+<div class="overlay">
+  <div class="hero-content">
+    <button class="btn btn--large btn--accent floating-btn" id="cop-btn">Cop Shit</button>
+    <button class="btn btn--large btn--primary contact-btn" id="contact-btn">Contact Me</button>
+  </div>
+</div>
+
+<!-- Currency Selector -->
+<div class="currency-selector">
+  <select id="currency-select">
+    <option value="USD">USD ($)</option>
+    <option value="EUR">EUR (€)</option>
+    <option value="GBP">GBP (£)</option>
+    <option value="JPY">JPY (¥)</option>
+    <option value="CAD">CAD (C$)</option>
+    <option value="NGN">NGN (₦)</option>
+  </select>
+</div>
+
+<section class="product-grid">
+  {% for p in products %}
+  <div class="product-card">
+    <div class="product-image">
+      {% if p.image_url %}
+        <img src="{{ p.image_url }}" alt="{{ p.name }}" />
+      {% else %}
+        <div class="product-image-placeholder">NO IMAGE</div>
+      {% endif %}
+    </div>
+    <div class="product-info">
+      <h2>{{ p.name }}</h2>
+      <p class="product-desc">{{ p.description }}</p>
+      <div class="product-footer">
+        <span class="price" data-usd="{{ p.price }}">${{ "%.2f"|format(p.price) }}</span>
+        <form action="{{ url_for('add_to_cart', product_id=p.id) }}" method="POST">
+          <button type="submit" class="btn">Add to Cart</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <p class="empty">No products available right now.</p>
+  {% endfor %}
+</section>
+
+<script>
+  // Currency conversion rates (approximate, update as needed)
+  const rates = {
+    USD: 1,
+    EUR: 0.85,
+    GBP: 0.73,
+    JPY: 110,
+    CAD: 1.25,
+    NGN: 1500
+  };
+
+  const symbols = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    JPY: '¥',
+    CAD: 'C$',
+    NGN: '₦'
+  };
+
+  // Currency selector
+  document.getElementById('currency-select').addEventListener('change', function() {
+    const selectedCurrency = this.value;
+    const rate = rates[selectedCurrency];
+    const symbol = symbols[selectedCurrency];
+
+    document.querySelectorAll('.price').forEach(priceEl => {
+      const usdPrice = parseFloat(priceEl.dataset.usd);
+      const convertedPrice = (usdPrice * rate).toFixed(2);
+      priceEl.textContent = `${symbol}${convertedPrice}`;
+    });
+  });
+
+  // Carousel functionality
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.carousel-slide');
+  const totalSlides = slides.length;
+
+  function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[index].classList.add('active');
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    showSlide(currentSlide);
+  }
+
+  // Auto-change slides every 5 seconds
+  setInterval(nextSlide, 5000);
+
+  // Button actions (placeholders)
+  document.getElementById('cop-btn').addEventListener('click', function() {
+    // Scroll to products or something
+    document.querySelector('.product-grid').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('contact-btn').addEventListener('click', function() {
+    // Placeholder for contact action
+    alert('Contact form coming soon!');
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Shop — ARTSTORE{% endblock %}
+
+{% block content %}
+<!-- Image Carousel Background -->
+<div class="carousel-background">
+  <div class="carousel-slide active" style="background-image: url('/static/0a65b76d759317837a91e0295e8dda82.jpg');"></div>
+  <div class="carousel-slide" style="background-image: url('/static/16238e7e49bc264d6258ff04deb6d5d4.jpg');"></div>
+  <div class="carousel-slide" style="background-image: url('/static/451bbd2bf4bcbaa8e9d4d27942824ab3.jpg');"></div>
+  <div class="carousel-slide" style="background-image: url('/static/6f5ddfd9b29d15246ec892aaff7ef668.jpg');"></div>
+  <div class="carousel-slide" style="background-image: url('/static/8e7255b6063afdb02d50f062b0d6bae5.jpg');"></div>
+</div>
+
+<!-- Overlay Content -->
+<div class="overlay">
+  <div class="hero-content">
+    <a href="{{ url_for('products') }}" class="btn btn--large btn--accent floating-btn">Cop Shit</a>
+    <button class="btn btn--large btn--primary contact-btn" id="contact-btn">Contact Me</button>
+  </div>
+</div>
+
+<script>
+  // Carousel functionality
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.carousel-slide');
+  const totalSlides = slides.length;
+
+  function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[index].classList.add('active');
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    showSlide(currentSlide);
+  }
+
+  // Auto-change slides every 5 seconds
+  setInterval(nextSlide, 5000);
+
+  // Button actions
+  document.getElementById('contact-btn').addEventListener('click', function() {
+    // Placeholder for contact action
+    alert('Contact form coming soon!');
+  });
+</script>
+{% endblock %}

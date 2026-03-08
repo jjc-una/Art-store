@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed — ARTSTORE{% endblock %}
+
+{% block content %}
+<div class="confirmed-container">
+  <div class="confirmed-icon">✓</div>
+  <h1>Order Confirmed</h1>
+  <p>Thanks, <strong>{{ order.name }}</strong>. Your order for <strong>${{ "%.2f"|format(order.total) }}</strong> has been received.</p>
+  <p class="confirmed-sub">A confirmation would be sent to {{ order.email }} — if this were a real store.</p>
+  <a href="{{ url_for('index') }}" class="btn btn--accent">Back to Shop</a>
+</div>
+{% endblock %}

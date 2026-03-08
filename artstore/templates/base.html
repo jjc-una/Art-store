@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}ARTSTORE{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <script>
+    // Currency conversion rates (approximate, update as needed)
+    const rates = {
+      USD: 1,
+      EUR: 0.85,
+      GBP: 0.73,
+      JPY: 110,
+      CAD: 1.25,
+      NGN: 1500
+    };
+
+    const symbols = {
+      USD: '$',
+      EUR: '€',
+      GBP: '£',
+      JPY: '¥',
+      CAD: 'C$',
+      NGN: '₦'
+    };
+
+    // Load saved currency preference
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedCurrency = localStorage.getItem('selectedCurrency') || 'USD';
+      const currencySelect = document.getElementById('currency-select');
+      if (currencySelect) {
+        currencySelect.value = savedCurrency;
+        convertPrices(savedCurrency);
+      }
+    });
+
+    // Currency selector event listener
+    function setupCurrencySelector() {
+      const currencySelect = document.getElementById('currency-select');
+      if (currencySelect) {
+        currencySelect.addEventListener('change', function() {
+          const selectedCurrency = this.value;
+          localStorage.setItem('selectedCurrency', selectedCurrency);
+          convertPrices(selectedCurrency);
+        });
+      }
+    }
+
+    function convertPrices(currency) {
+      const rate = rates[currency];
+      const symbol = symbols[currency];
+
+      document.querySelectorAll('.price').forEach(priceEl => {
+        const usdPrice = parseFloat(priceEl.dataset.usd);
+        const convertedPrice = (usdPrice * rate).toFixed(2);
+        priceEl.textContent = `${symbol}${convertedPrice}`;
+      });
+    }
+
+    // Setup currency selector when DOM is ready
+    document.addEventListener('DOMContentLoaded', setupCurrencySelector);
+  </script>
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('index') }}" class="nav-logo">ARTSTORE</a>
+    <div class="nav-links">
+      <a href="{{ url_for('products') }}">Products</a>
+      <div class="currency-selector">
+        <select id="currency-select">
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="JPY">JPY (¥)</option>
+          <option value="CAD">CAD (C$)</option>
+          <option value="NGN">NGN (₦)</option>
+        </select>
+      </div>
+      <a href="{{ url_for('cart') }}" class="cart-link">
+        Cart {% if cart_count > 0 %}<span class="badge">{{ cart_count }}</span>{% endif %}
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash flash--{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>ARTSTORE © 2026 &nbsp;·&nbsp; <a href="{{ url_for('admin') }}">Admin</a></p>
+  </footer>
+</body>
+</html>
