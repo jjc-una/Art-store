@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — ARTSTORE ADMIN{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Admin Dashboard</h1>
+  <a href="{{ url_for('admin_logout') }}" class="btn btn--ghost btn--small">Logout</a>
+</div>
+
+<!-- Add Product Form -->
+<section class="admin-section">
+  <h2>Add New Product</h2>
+  <form method="POST" action="{{ url_for('admin_add') }}" class="admin-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" placeholder="Caelum City Print" required />
+      </div>
+      <div class="form-group">
+        <label>Price ($)</label>
+        <input type="number" name="price" step="0.01" placeholder="45.00" required />
+      </div>
+      <div class="form-group">
+        <label>Stock</label>
+        <input type="number" name="stock" placeholder="10" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" name="description" placeholder="Short description of the item" />
+    </div>
+    <div class="form-group">
+      <label>Image URL</label>
+      <input type="text" name="image_url" placeholder="https://..." />
+    </div>
+    <button type="submit" class="btn btn--accent">Add Product</button>
+  </form>
+</section>
+
+<!-- Product List -->
+<section class="admin-section">
+  <h2>All Products ({{ products|length }})</h2>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td>${{ "%.2f"|format(p.price) }}</td>
+        <td>{{ p.stock }}</td>
+        <td>
+          <a href="{{ url_for('admin_edit', product_id=p.id) }}" class="btn btn--primary btn--small">Edit</a>
+          <form action="{{ url_for('admin_delete', product_id=p.id) }}" method="POST"
+                onsubmit="return confirm('Delete {{ p.name }}?')" style="display: inline;">
+            <button type="submit" class="btn btn--danger btn--small">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

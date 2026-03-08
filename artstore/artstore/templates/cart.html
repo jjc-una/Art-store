@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Cart — ARTSTORE{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Your Cart</h1>
+</div>
+
+{% if items %}
+<div class="cart-container">
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Subtotal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td class="cart-name">{{ item.product.name }}</td>
+        <td>${{ "%.2f"|format(item.product.price) }}</td>
+        <td>{{ item.qty }}</td>
+        <td>${{ "%.2f"|format(item.subtotal) }}</td>
+        <td>
+          <form action="{{ url_for('remove_from_cart', product_id=item.product.id) }}" method="POST">
+            <button type="submit" class="btn btn--ghost btn--small">Remove</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="cart-summary">
+    <span class="cart-total">Total: ${{ "%.2f"|format(total) }}</span>
+    <a href="{{ url_for('checkout') }}" class="btn btn--accent">Checkout →</a>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <p>Your cart is empty.</p>
+  <a href="{{ url_for('index') }}" class="btn">Browse Shop</a>
+</div>
+{% endif %}
+{% endblock %}
